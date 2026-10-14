@@ -125,3 +125,45 @@ export const getKarachiDayBounds = (dateStr?: string) => {
   };
 };
 
+/**
+ * Returns the Monday-to-Sunday week range for a given date in YYYY-MM-DD.
+ */
+export const getWeekRange = (dateStr: string): { startDate: string; endDate: string } => {
+  const [year, month, day] = dateStr.split('-').map(Number);
+  const targetDate = new Date(year, month - 1, day);
+  const dayOfWeek = targetDate.getDay(); // 0 is Sunday, 1 is Monday...
+  
+  // Calculate distance to previous Monday
+  const distanceToMonday = (dayOfWeek + 6) % 7;
+  const monday = new Date(year, month - 1, day - distanceToMonday);
+  const sunday = new Date(year, month - 1, day - distanceToMonday + 6);
+
+  const pad = (n: number) => n.toString().padStart(2, '0');
+  const formatYMD = (d: Date) =>
+    `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+
+  return {
+    startDate: formatYMD(monday),
+    endDate: formatYMD(sunday),
+  };
+};
+
+/**
+ * Returns the start and end date for the entire month of a given date.
+ */
+export const getMonthRange = (dateStr: string): { startDate: string; endDate: string } => {
+  const [year, month] = dateStr.split('-').map(Number);
+  const pad = (n: number) => n.toString().padStart(2, '0');
+  const startDate = `${year}-${pad(month)}-01`;
+
+  // Last day of month
+  const lastDay = new Date(year, month, 0).getDate();
+  const endDate = `${year}-${pad(month)}-${pad(lastDay)}`;
+
+  return {
+    startDate,
+    endDate,
+  };
+};
+
+
