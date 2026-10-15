@@ -13,6 +13,7 @@ export const Login: React.FC = () => {
   const location = useLocation();
 
   const from = (location.state as any)?.from?.pathname || '/dashboard';
+  const isExpired = new URLSearchParams(location.search).get('reason') === 'expired';
 
   useEffect(() => {
     // If already logged in, redirect away from login page
@@ -20,6 +21,7 @@ export const Login: React.FC = () => {
       navigate(from, { replace: true });
     }
   }, [user, authLoading, navigate, from]);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,6 +69,16 @@ export const Login: React.FC = () => {
             Internal team portal &bull; Asia/Karachi
           </p>
         </div>
+
+        {/* Session Expired Banner */}
+        {isExpired && !errorMessage && (
+          <div className="p-3.5 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-sm flex items-start space-x-2 animate-in fade-in">
+            <span className="font-bold flex-shrink-0 mt-0.5">⏱</span>
+            <div className="flex-1">
+              Your session has expired. Please sign in again with your credentials.
+            </div>
+          </div>
+        )}
 
         {/* Error Alert */}
         {errorMessage && (

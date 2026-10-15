@@ -33,8 +33,13 @@ export const HoursBarChart: React.FC<HoursBarChartProps> = ({ data, className = 
 
   return (
     <div className={`space-y-4 ${className}`}>
-      {/* Chart Canvas */}
-      <div className="relative h-64 flex items-end pt-8 pb-8 pl-10 pr-2 border-b border-l border-slate-200">
+      {/* Scrollable Container on Mobile */}
+      <div className="overflow-x-auto pb-4">
+        {/* Chart Canvas */}
+        <div className={`relative h-64 flex items-end pt-8 pb-8 pl-10 pr-2 border-b border-l border-slate-200 ${
+          data.length > 7 ? 'min-w-[520px]' : 'min-w-full'
+        }`}>
+
         {/* Background Grid Lines & Y-Axis Labels */}
         {gridSteps.map((step) => {
           const bottomPercent = (step / maxScaleHours) * 100;
@@ -138,6 +143,8 @@ export const HoursBarChart: React.FC<HoursBarChartProps> = ({ data, className = 
           })}
         </div>
       </div>
+    </div>
+
 
       <div className="flex items-center justify-between text-xs text-slate-400 pt-1">
         <span>X-Axis: Days of the period</span>

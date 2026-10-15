@@ -90,8 +90,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     initializeAuth();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
       if (!isMounted) return;
+
+      if (event === 'TOKEN_REFRESHED') {
+        setSession(currentSession);
+      }
 
       setSession(currentSession);
       const currentUser = currentSession?.user ?? null;
@@ -118,6 +122,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       subscription.unsubscribe();
     };
   }, [fetchProfile]);
+
 
   const signIn = async (email: string, password: string): Promise<{ error: AuthError | null }> => {
     setLoading(true);
